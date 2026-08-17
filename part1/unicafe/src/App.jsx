@@ -8,6 +8,15 @@ const Header = ({text}) => <h1>{text}</h1>
 
 const Statistics = ({good, bad, neutral}) => {
   const total = good + neutral + bad
+
+  if (total === 0) {
+    return (
+      <div>
+        <Display text='No feedback given'/>
+      </div>
+    )
+  }
+
   const average = (good - bad) / total
   const positive = ((good / total) * 100) + ' %'
 
