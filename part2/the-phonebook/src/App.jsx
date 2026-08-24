@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import Persons from './components/Persons'
+import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 
@@ -11,10 +11,12 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   // fetch initial persons.json from server
-  personService
-  .getAll()
-  .then(initialPersons => {
-    setPersons(initialPersons)
+  useEffect(() => {
+    personService
+    .getAll()
+    .then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }, [])
 
   const personsToShow = persons.filter(person =>
@@ -31,7 +33,25 @@ const App = () => {
     .then(returnedPerson => {
       setPersons(persons.concat(returnedPerson))
     })
-  } 
+  }
+
+const deletePerson = id => {
+  const person = persons.find(p => p.id === id)
+
+  if (!person) return
+
+  if (window.confirm(`Delete ${person.name}?`)) {
+    personService
+      .remove(id)
+      .then(() => {
+        setPersons(persons.filter(p => p.id !== id))
+      })
+      .catch(error => {
+        alert(`The person '${person.name}' was already deleted from the server`)
+        setPersons(persons.filter(p => p.id !== id))
+      })
+  }
+}
   
   return (
     <div>
@@ -42,7 +62,14 @@ const App = () => {
       <PersonForm addPerson={addPerson}/>
       
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <div>
+        {personsToShow.map(person =>
+          <Person
+          key={person.id}
+          person={person} 
+          deletePerson={() => deletePerson(person.id)}/>
+        )}
+      </div>
     </div>
   )
 }
