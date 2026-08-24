@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const PersonForm = ({persons, setPersons}) => {
+const PersonForm = ({ addPerson }) => {
     const [newContact, setNewContact] = useState({ name: '', number: '' })
 
     const handleChange = (event) => {
@@ -11,24 +11,14 @@ const PersonForm = ({persons, setPersons}) => {
     })
     }
 
-    const addPerson = (event) => {
-        event.preventDefault()
-
-        const nameExists = persons.some(person => person.name === newContact.name)
-        if (nameExists) return alert(`${newContact.name} is already added to phonebook`)
-
-        const personObject = {
-            name: newContact.name,
-            number: newContact.number,
-            id: persons.length + 1,
-        }
-
-        setPersons(persons.concat(personObject))
-        setNewContact({ name: '', number: '' })
+    const handleSubmit = (event) => {
+    event.preventDefault()
+      addPerson(newContact)
+      setNewContact({ name: '', number: '' })
     }
 
     return (
-      <form onSubmit={addPerson}>
+      <form onSubmit={handleSubmit}>
         <div>
           name: <input 
           value={newContact.name}
