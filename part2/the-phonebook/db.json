@@ -29,6 +29,11 @@
       "name": "Dietz Nuts",
       "number": "040-192048",
       "id": "UTU5rQUlaJI"
+    },
+    {
+      "name": "asda",
+      "number": "1212312312",
+      "id": "gL7pKlKEGRk"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

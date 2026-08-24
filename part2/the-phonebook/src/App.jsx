@@ -5,6 +5,7 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 
 import personService from './services/person'
+import person from './services/person'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -24,9 +25,23 @@ const App = () => {
   )
 
   const addPerson = (personObject) => {
-    // check if name exists if so alert and exit out
-    const nameExists = persons.some(person => person.name === personObject.name)
-    if (nameExists) return alert(`${personObject.name} is already added to phonebook`)
+    const person = persons.find(p => p.name === personObject.name)
+    if (person) {
+      if (confirm(`${personObject.name} is already added to phonebook, replace the old number with the new one?`)) {
+        const changedPerson = {...person, number : personObject.number}
+
+        personService
+        .update(person.id, changedPerson)
+        .then (returnedPerson => {
+          setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
+        })
+        .catch(error => {
+          alert(`The person '${person.name}' was already deleted from the server`)
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
+      }
+      else return
+    }
 
     personService
     .create(personObject)
