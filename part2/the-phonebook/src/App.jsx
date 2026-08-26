@@ -3,15 +3,17 @@ import { useState, useEffect } from 'react'
 import Person from './components/Person'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
-
+import Notification from './components/Notification'
 import personService from './services/person'
-import person from './services/person'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [filter, setFilter] = useState('')
+  const [message, setMessage] = useState({
+    content: null,
+    type: 'debug'
+  });
 
-  // fetch initial persons.json from server
   useEffect(() => {
     personService
     .getAll()
@@ -35,6 +37,7 @@ const App = () => {
         .then (returnedPerson => {
           setPersons(persons.map(p => p.id === person.id ? returnedPerson : p))
         })
+
         .catch(error => {
           alert(`The person '${person.name}' was already deleted from the server`)
           setPersons(persons.filter(p => p.id !== person.id))
@@ -48,6 +51,13 @@ const App = () => {
     .then(returnedPerson => {
       setPersons(persons.concat(returnedPerson))
     })
+    setMessage({
+      content:`Added ${personObject.name}`,
+      type: 'success'
+    })
+    setTimeout(() => {
+      setMessage({content: null, type: 'debug'})
+    }, 5000)
   }
 
 const deletePerson = id => {
@@ -62,7 +72,15 @@ const deletePerson = id => {
         setPersons(persons.filter(p => p.id !== id))
       })
       .catch(error => {
-        alert(`The person '${person.name}' was already deleted from the server`)
+        
+      setMessage({
+          content:`The person '${person.name}' was already deleted from the server`,
+          type: 'error'
+        })
+        setTimeout(() => {
+          setMessage({content: null, type: 'debug'})  
+        }, 5000)
+
         setPersons(persons.filter(p => p.id !== id))
       })
   }
@@ -71,6 +89,7 @@ const deletePerson = id => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification {...message} />
       <Filter value={filter} setValue={setFilter} />
 
       <h3>Add a new</h3>
