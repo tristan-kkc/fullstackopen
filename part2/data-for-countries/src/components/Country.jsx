@@ -1,3 +1,5 @@
+import Weather from "./Weather"
+
 const Country = ({ country, detailed, showDetailed}) => {
     if (!detailed) {
         return (
@@ -27,6 +29,12 @@ const Country = ({ country, detailed, showDetailed}) => {
                 src={country.flags.png} 
                 alt={`Flag of ${country.name.common}`} 
                 style={{ width: '128px' }} 
+            />
+
+            <Weather 
+            lat={country.capitalInfo.latlng[0]} 
+            lon={country.capitalInfo.latlng[1]} 
+            country={country.name.common} 
             />
         </div>
     )
