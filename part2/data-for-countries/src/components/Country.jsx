@@ -1,8 +1,9 @@
-const Country = ({ country, detailed }) => {
+const Country = ({ country, detailed, showDetailed}) => {
     if (!detailed) {
         return (
             <li>
                 {country.name.common}
+                <button onClick={showDetailed}>show</button>
             </li>
         )
     }
@@ -25,7 +26,7 @@ const Country = ({ country, detailed }) => {
             <img 
                 src={country.flags.png} 
                 alt={`Flag of ${country.name.common}`} 
-                style={{ width: '256px' }} 
+                style={{ width: '128px' }} 
             />
         </div>
     )

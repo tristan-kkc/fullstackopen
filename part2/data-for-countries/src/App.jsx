@@ -28,7 +28,12 @@ const App = () => {
         content = <Country country={countriesToShow[0]} detailed={true} />
     } else {
         content = countriesToShow.map(country => (
-            <Country key={country.name.common} country={country} detailed={false} />
+            <Country 
+            key={country.name.common} 
+            country={country} 
+            detailed={false}
+            showDetailed={() => setSearch(country.name.common)}
+            />
         ))
     }
 
